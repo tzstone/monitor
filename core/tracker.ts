@@ -10,13 +10,19 @@ export class Tracker {
   private queue: any[]
   private options: InitOptions
   constructor(options: InitOptions) {
+    // TODO: def
     this.options = options
   }
   track(data, config?: ConfigInit) {
-    const { limit } = this.options
+    const { limit, debug } = this.options
     const commonInfo = getCommonInfo(this.options)
     const info = Object.assign({}, commonInfo, data)
-    if (config.immediate) {
+
+    if (debug) {
+      console.log('[monitor track]:', info)
+    }
+
+    if (config && config.immediate) {
       this.send([info])
     } else {
       this.queue.push(info)

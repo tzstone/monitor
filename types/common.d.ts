@@ -5,6 +5,7 @@ export interface InitOptions {
   appVersion?: string
   userId: string
   userName?: string
+  debug?: boolean
 }
 
 export interface Tracker {

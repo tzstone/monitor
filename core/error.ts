@@ -8,6 +8,7 @@ function initJSErrorListener(monitor: Monitor) {
     return function (msg, url, line, col, error) {
       const data = formatJSError({ msg, url, line, col, error }) as JsErrorInfo
       monitor.track(data, { immediate: true })
+
       if (typeof original === 'function') {
         original.call(this, msg, url, line, col, error)
       }

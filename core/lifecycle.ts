@@ -67,7 +67,10 @@ function initUnloadListener(monitor: Monitor) {
     if (alreadySent) return
     alreadySent = true
     const { options, $tracker } = monitor
-    send(options.url, $tracker.getNotSentData())
+    const data = $tracker.getNotSentData()
+    if (data && data.length > 0) {
+      send(options.url, data)
+    }
   }
 
   on('beforeunload', unloadHandler)
