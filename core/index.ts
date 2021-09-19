@@ -1,9 +1,9 @@
 import { initLifecycle } from './lifecycle'
-import { startCollectError } from './error'
-import { startCollectHistory } from './history'
+import { initErrorListener } from './error'
+import { initHistoryListener } from './history'
 
-export function initCollect(monitor) {
+export function init(monitor) {
   initLifecycle(monitor)
-  startCollectError(monitor)
-  startCollectHistory(monitor)
+  initErrorListener(monitor)
+  initHistoryListener(monitor)
 }

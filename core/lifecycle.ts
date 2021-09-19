@@ -62,7 +62,7 @@ function send(url: string, data: any[]) {
 
 let alreadySent = false
 
-function addUnloadListener(monitor: Monitor) {
+function initUnloadListener(monitor: Monitor) {
   function unloadHandler() {
     if (alreadySent) return
     alreadySent = true
@@ -77,5 +77,5 @@ function addUnloadListener(monitor: Monitor) {
 export function initLifecycle(monitor) {
   wrapXMLHttpRequest(monitor)
   wrapFetch(monitor)
-  addUnloadListener(monitor)
+  initUnloadListener(monitor)
 }

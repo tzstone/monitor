@@ -1,5 +1,5 @@
 import { error } from './utils'
-import { initCollect } from './core'
+import { init } from './core'
 import { Tracker } from './core/tracker'
 import { InitOptions } from './types'
 
@@ -30,7 +30,7 @@ export class Monitor {
 
     this.options = Object.assign({}, defOptions, options || {}) as InitOptions
     this.$tracker = new Tracker(this.options)
-    initCollect(this)
+    init(this)
   }
   track(data, config?) {
     this.$tracker.track(data, config)

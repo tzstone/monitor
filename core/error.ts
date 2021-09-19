@@ -2,7 +2,7 @@ import { on, fill, formatJSError } from '../utils'
 import { Monitor, JsErrorInfo, ResourceErrorInfo, RequestErrorInfo, UploadType } from '../types'
 
 // js
-function collectJSError(monitor: Monitor) {
+function initJSErrorListener(monitor: Monitor) {
   // window.onerror
   fill(window, 'onerror', function (original) {
     return function (msg, url, line, col, error) {
@@ -22,7 +22,7 @@ function collectJSError(monitor: Monitor) {
 }
 
 // resource
-function collectResourceError(monitor: Monitor) {
+function initResourceErrorListener(monitor: Monitor) {
   on(
     'onerror',
     function (e: Event) {
@@ -54,7 +54,7 @@ interface FetchDetail {
 }
 
 // request
-function collectRequestError(monitor: Monitor) {
+function initRequestErrorListener(monitor: Monitor) {
   on('xhrLoadEnd', function (e: CustomEventInit) {
     const { delay, xhr } = e.detail as XhrDetail
     const { status, statusText, responseText, responseURL } = xhr
@@ -90,8 +90,8 @@ function collectRequestError(monitor: Monitor) {
   })
 }
 
-export function startCollectError(monitor) {
-  collectJSError(monitor)
-  collectRequestError(monitor)
-  collectResourceError(monitor)
+export function initErrorListener(monitor) {
+  initJSErrorListener(monitor)
+  initRequestErrorListener(monitor)
+  initResourceErrorListener(monitor)
 }
