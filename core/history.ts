@@ -1,12 +1,5 @@
 import { on, fill } from '../utils'
-import { Monitor, UploadType } from '../types'
-
-interface HistoryInfo {
-  from: string | null
-  to: string
-  stayTime: number | null
-  uploadType: UploadType
-}
+import { Monitor, HistoryInfo, UploadType } from '../types'
 
 export function startCollectHistory(monitor: Monitor) {
   let startTime, endTime, from, to
