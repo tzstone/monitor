@@ -1,0 +1,29 @@
+{
+  "name": "monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tzstone/monitor.git"
+  },
+  "author": "flow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tzstone/monitor/issues"
+  },
+  "homepage": "https://github.com/tzstone/monitor#readme",
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "eslint-plugin-zflow": "^1.0.1",
+    "typescript": "~4.1.5"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
