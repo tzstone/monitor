@@ -6,12 +6,15 @@ interface ConfigInit {
   immediate: boolean
 }
 
+const defOptions = {
+  limit: 30
+}
+
 export class Tracker {
   private queue: any[]
   private options: InitOptions
   constructor(options: InitOptions) {
-    // TODO: def
-    this.options = options
+    this.options = Object.assign({}, defOptions, options)
   }
   track(data, uploadType: UploadType, config?: ConfigInit) {
     const { limit, debug } = this.options

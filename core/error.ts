@@ -1,5 +1,5 @@
 import { on, fill, formatJSError } from '../utils'
-import { Monitor, JsErrorInfo, ResourceErrorInfo, RequestErrorInfo, UploadType } from '../types'
+import { Monitor, JsErrorInfo, ResourceErrorInfo, RequestErrorInfo, UploadType, XhrDetail, FetchDetail } from '../types'
 
 // js
 function initJSErrorListener(monitor: Monitor) {
@@ -43,16 +43,6 @@ function initResourceErrorListener(monitor: Monitor) {
   )
 }
 
-interface XhrDetail {
-  delay: number
-  xhr: XMLHttpRequest
-}
-
-interface FetchDetail {
-  delay: number
-  res: Response
-}
-
 // request
 function initRequestErrorListener(monitor: Monitor) {
   on('xhrLoadEnd', function (e: CustomEventInit) {
@@ -88,7 +78,7 @@ function initRequestErrorListener(monitor: Monitor) {
   })
 }
 
-export function initErrorListener(monitor) {
+export function initErrorCollect(monitor) {
   initJSErrorListener(monitor)
   initRequestErrorListener(monitor)
   initResourceErrorListener(monitor)

@@ -7,6 +7,11 @@ export interface JsErrorInfo {
   errorType: string
 }
 
+export interface VueErrorInfo extends JsErrorInfo {
+  componentName: string
+  trace: string
+}
+
 export interface ResourceErrorInfo {
   errorMsg: string
   errorUrl: string
