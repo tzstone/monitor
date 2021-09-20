@@ -10,13 +10,13 @@ export interface InitOptions {
 
 export interface Tracker {
   getNotSentData(): any[]
-  track(data, options?: { [key: string]: any }): void
+  track(data, uploadType: UploadType, options?: { [key: string]: any }): void
 }
 
 export interface Monitor {
   options: InitOptions
   $tracker: Tracker
-  track(data, options?: { [key: string]: any }): void
+  track(data, uploadType: UploadType, options?: { [key: string]: any }): void
 }
 
 export interface CommonInfo {
@@ -25,7 +25,7 @@ export interface CommonInfo {
   // customerKey: string // 用户唯一标识
   appKey: string
   appVersion?: string
-  // uploadType: string // 日志类型
+  uploadType: string // 日志类型
   happenTime: number
   url: string // 页面url
   screen: string

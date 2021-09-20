@@ -1,4 +1,4 @@
-import { JsErrorInfo, UploadType } from '../types'
+import { JsErrorInfo } from '../types'
 interface JSErrorInit {
   msg: string
   url?: string
@@ -34,7 +34,6 @@ export function formatJSError({ msg = '', url, line, col, error, type }: JSError
     errorLine: line,
     errorCol: col,
     errorStack: stack,
-    errorType: type,
-    uploadType: UploadType.JsError
+    errorType: type
   }
 }

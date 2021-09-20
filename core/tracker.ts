@@ -1,6 +1,6 @@
 import { getCommonInfo } from './common'
 import { http } from '../utils'
-import { InitOptions } from '../types'
+import { InitOptions, UploadType } from '../types'
 
 interface ConfigInit {
   immediate: boolean
@@ -13,9 +13,9 @@ export class Tracker {
     // TODO: def
     this.options = options
   }
-  track(data, config?: ConfigInit) {
+  track(data, uploadType: UploadType, config?: ConfigInit) {
     const { limit, debug } = this.options
-    const commonInfo = getCommonInfo(this.options)
+    const commonInfo = getCommonInfo(this.options, uploadType)
     const info = Object.assign({}, commonInfo, data)
 
     if (debug) {

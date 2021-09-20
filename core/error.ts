@@ -7,7 +7,7 @@ function initJSErrorListener(monitor: Monitor) {
   fill(window, 'onerror', function (original) {
     return function (msg, url, line, col, error) {
       const data = formatJSError({ msg, url, line, col, error }) as JsErrorInfo
-      monitor.track(data, { immediate: true })
+      monitor.track(data, UploadType.JsError, { immediate: true })
 
       if (typeof original === 'function') {
         original.call(this, msg, url, line, col, error)
@@ -18,7 +18,7 @@ function initJSErrorListener(monitor: Monitor) {
   // unhandledrejection
   on('unhandledrejection', function (e: any) {
     const data = formatJSError({ msg: e.reason, type: 'Unhandledrejection' }) as JsErrorInfo
-    monitor.track(data, { immediate: true })
+    monitor.track(data, UploadType.JsError, { immediate: true })
   })
 }
 
@@ -34,10 +34,9 @@ function initResourceErrorListener(monitor: Monitor) {
         const data: ResourceErrorInfo = {
           errorMsg: target.outerHTML,
           errorUrl: url,
-          errorType: type,
-          uploadType: UploadType.ResourceError
+          errorType: type
         }
-        monitor.track(data, { immediate: true })
+        monitor.track(data, UploadType.ResourceError, { immediate: true })
       }
     },
     true
@@ -65,10 +64,9 @@ function initRequestErrorListener(monitor: Monitor) {
         errorStatus: status,
         errorStatusText: statusText,
         errorResponseText: responseText,
-        errorDelay: delay,
-        uploadType: UploadType.RequestError
+        errorDelay: delay
       }
-      monitor.track(data, { immediate: true })
+      monitor.track(data, UploadType.RequestError, { immediate: true })
     }
   })
 
@@ -82,10 +80,9 @@ function initRequestErrorListener(monitor: Monitor) {
           errorStatus: status,
           errorStatusText: statusText,
           errorResponseText: responseText,
-          errorDelay: delay,
-          uploadType: UploadType.RequestError
+          errorDelay: delay
         }
-        monitor.track(data, { immediate: true })
+        monitor.track(data, UploadType.RequestError, { immediate: true })
       })
     }
   })

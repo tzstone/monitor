@@ -1,5 +1,3 @@
-import { UploadType } from './index'
-
 export interface JsErrorInfo {
   errorMsg: string
   errorUrl: string
@@ -7,14 +5,12 @@ export interface JsErrorInfo {
   errorCol?: number
   errorStack?: string | null
   errorType: string
-  uploadType: UploadType
 }
 
 export interface ResourceErrorInfo {
   errorMsg: string
   errorUrl: string
   errorType: string // link, script, img
-  uploadType: UploadType
 }
 
 export interface RequestErrorInfo {
@@ -23,5 +19,4 @@ export interface RequestErrorInfo {
   errorStatusText: string
   errorResponseText: string
   errorDelay: number
-  uploadType: UploadType
 }

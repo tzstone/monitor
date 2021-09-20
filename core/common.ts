@@ -1,11 +1,11 @@
-import { InitOptions } from '../types'
+import { InitOptions, UploadType } from '../types'
 
 const screen = (() => {
   const { clientWidth, clientHeight } = document.documentElement
   return `${clientWidth}x${clientHeight}`
 })()
 
-export function getCommonInfo(options: InitOptions) {
+export function getCommonInfo(options: InitOptions, uploadType: UploadType) {
   const { userId, userName, appKey, appVersion } = options
   return {
     userId,
@@ -15,6 +15,7 @@ export function getCommonInfo(options: InitOptions) {
     happenTime: +new Date(),
     url: window.location.href,
     screen,
+    uploadType,
     ua: navigator.userAgent
   }
 }

@@ -8,10 +8,9 @@ export function initHistoryListener(monitor: Monitor) {
     const initData: HistoryInfo = {
       from: null,
       to: window.location.href,
-      stayTime: null,
-      uploadType: UploadType.History
+      stayTime: null
     }
-    monitor.track(initData)
+    monitor.track(initData, UploadType.History)
 
     // init
     startTime = +new Date()
@@ -27,10 +26,9 @@ export function initHistoryListener(monitor: Monitor) {
     const data: HistoryInfo = {
       from,
       to,
-      stayTime,
-      uploadType: UploadType.History
+      stayTime
     }
-    monitor.track(data)
+    monitor.track(data, UploadType.History)
 
     from = to
     startTime = endTime
