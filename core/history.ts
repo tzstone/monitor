@@ -1,7 +1,7 @@
 import { on, fill } from '../utils'
 import { Monitor, HistoryInfo, UploadType } from '../types'
 
-export function initHistoryListener(monitor: Monitor) {
+export function initHistoryCollect(monitor: Monitor) {
   let startTime, endTime, from, to
 
   on('load', function () {

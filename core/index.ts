@@ -1,9 +1,11 @@
 import { initLifecycle } from './lifecycle'
-import { initErrorListener } from './error'
-import { initHistoryListener } from './history'
+import { initErrorCollect } from './error'
+import { initHistoryCollect } from './history'
+import { initPerformanceCollect } from './performance'
 
 export function init(monitor) {
   initLifecycle(monitor)
-  initErrorListener(monitor)
-  initHistoryListener(monitor)
+  initErrorCollect(monitor)
+  initHistoryCollect(monitor)
+  initPerformanceCollect(monitor)
 }

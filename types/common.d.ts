@@ -1,4 +1,4 @@
-export interface InitOptions {
+export type InitOptions = {
   limit?: number
   url: string
   appKey: string
@@ -6,6 +6,7 @@ export interface InitOptions {
   userId: string
   userName?: string
   debug?: boolean
+  plugins?: any[]
 }
 
 export interface Tracker {
@@ -40,5 +41,23 @@ export enum UploadType {
   JsError = 'JS_ERROR',
   ResourceError = 'RESOURCE_ERROR',
   RequestError = 'REQUEST_ERROR',
-  History = 'HISTORY'
+  History = 'HISTORY',
+  ResponseTime = 'RESPONSE_TIME'
+}
+
+export type ViewModel = {
+  _isVue: boolean
+  $root: ViewModel
+  $parent?: ViewModel
+  $props: { [key: string]: any }
+  $options: {
+    name?: string
+    propsData?: { [key: string]: any }
+    _componentTag?: string
+    __file?: string
+  }
+}
+
+export type Plugin = {
+  install(monitor: Monitor): void
 }
