@@ -1,23 +1,33 @@
 export const on = (function () {
   if (document.addEventListener) {
-    return function (event: string, handler: EventListenerOrEventListenerObject, capture = false) {
-      window.addEventListener(event, handler, capture)
+    return function (
+      el: Window | Document | HTMLElement,
+      event: string,
+      handler: EventListenerOrEventListenerObject,
+      capture = false
+    ) {
+      el.addEventListener(event, handler, capture)
     }
   } else {
-    return function (event: string, handler: EventListenerOrEventListenerObject) {
-      window['attachEvent']('on' + event, handler)
+    return function (el: Window | Document | HTMLElement, event: string, handler: EventListenerOrEventListenerObject) {
+      el['attachEvent']('on' + event, handler)
     }
   }
 })()
 
 export const off = (function () {
   if (document.addEventListener) {
-    return function (event: string, handler: EventListenerOrEventListenerObject, capture = false) {
-      window.removeEventListener(event, handler, capture)
+    return function (
+      el: Window | Document | HTMLElement,
+      event: string,
+      handler: EventListenerOrEventListenerObject,
+      capture = false
+    ) {
+      el.removeEventListener(event, handler, capture)
     }
   } else {
-    return function (event: string, handler: EventListenerOrEventListenerObject) {
-      window['detachEvent']('on' + event, handler)
+    return function (el: Window | Document | HTMLElement, event: string, handler: EventListenerOrEventListenerObject) {
+      el['detachEvent']('on' + event, handler)
     }
   }
 })()

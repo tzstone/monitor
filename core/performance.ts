@@ -2,11 +2,11 @@ import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '.
 import { on } from '../utils'
 
 function initPerformanceListener(monitor: Monitor) {
-  //
+  // TODO:
 }
 
 function initResponseTimeListener(monitor: Monitor) {
-  on('xhrLoadEnd', function (e: CustomEventInit) {
+  on(window, 'xhrLoadEnd', function (e: CustomEventInit) {
     const { delay, xhr } = e.detail as XhrDetail
     const { status, statusText, responseText, responseURL } = xhr
     if ((status >= 200 && status < 300) || status === 304) {
@@ -21,7 +21,7 @@ function initResponseTimeListener(monitor: Monitor) {
     }
   })
 
-  on('fetchLoadEnd', function (e: CustomEventInit) {
+  on(window, 'fetchLoadEnd', function (e: CustomEventInit) {
     const { delay, res } = e.detail as FetchDetail
     if (res.ok) {
       const { status, statusText, url } = res
