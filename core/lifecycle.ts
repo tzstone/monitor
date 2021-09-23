@@ -5,6 +5,14 @@ import { Monitor } from '../types'
 function wrapXMLHttpRequest(monitor: Monitor) {
   const url = monitor.options.url
   // 兼容IE9及以上
+  fill(XMLHttpRequest.prototype, 'open', function (original) {
+    return function (method, url) {
+      this._requestUrl = url
+      // eslint-disable-next-line
+      return original.apply(this, arguments)
+    }
+  })
+
   fill(XMLHttpRequest.prototype, 'send', function (originalSend) {
     return function (...sendArgs) {
       // eslint-disable-next-line
@@ -14,7 +22,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
         fill(xhr, 'onreadystatechange', function (originalChange) {
           return function (...changeArgs) {
             if (xhr.readyState === 4) {
-              if (url !== xhr.responseURL) {
+              if (url !== (xhr as any)._requestUrl) {
                 const endTime = +new Date()
                 const delay = endTime - startTime
                 eventTrigger('xhrLoadEnd', { delay, xhr })
