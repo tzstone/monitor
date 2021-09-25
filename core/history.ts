@@ -30,6 +30,7 @@ export function initHistoryCollect(monitor: Monitor) {
     // unload时to=null
     to = location.href === from ? null : location.href
     const stayTime = getStayTime(from)
+    delete stayTimeMap[from]
 
     // TODO: check load完成
     if (stayTime > 0) {
@@ -53,7 +54,14 @@ export function initHistoryCollect(monitor: Monitor) {
   }
 
   const stateMachine = new StateMachine({
-    initial: State.Active,
+    init: State.Active,
+    transitions: [
+      { from: State.Active, to: State.Passive },
+      { from: State.Active, to: State.Terminated },
+      { from: State.Passive, to: State.Active },
+      { from: State.Passive, to: State.Terminated },
+      { from: State.Terminated, to: State.Active }
+    ],
     onEnterState(state) {
       switch (state) {
         case State.Active:

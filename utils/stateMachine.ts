@@ -1,46 +1,42 @@
-interface EventInfo {
+interface TransitionInfo {
   from: string
   to: string
-  handler?: (oldState: string, newState: string) => void
+  handler?: (newState: string, oldState: string) => boolean | void // 返回false表示不允许状态流转
 }
 
 interface OptionsInit {
-  initial: string
-  events?: EventInfo[]
-  allowStateCycle?: boolean // 允许状态循环转变(即转变至当前状态)
+  init: string
+  transitions: TransitionInfo[]
   onEnterState?: (state: string) => void
   onLeaveState?: (state: string) => void
 }
 
 export class StateMachine {
   private state: string
-  private events: EventInfo[]
+  private transitions: TransitionInfo[] // 定义允许的状态流转过程
   private onEnterState: (state: string) => void
   private onLeaveState: (state: string) => void
-  private allowStateCycle = false
   constructor(options: OptionsInit) {
-    const { initial, events, onEnterState, onLeaveState, allowStateCycle } = options
-    this.state = initial
-    this.events = events
+    const { init, transitions, onEnterState, onLeaveState } = options
+    this.state = init
+    this.transitions = transitions
     this.onEnterState = onEnterState
     this.onLeaveState = onLeaveState
-    if (allowStateCycle != null) {
-      this.allowStateCycle = allowStateCycle
-    }
     if (this.onEnterState) this.onEnterState(this.state)
   }
   setState(newState) {
-    if (!this.allowStateCycle && this.state === newState) return
+    const transition = this.transitions.find(e => e.from === this.state && e.to === newState)
+    if (transition) {
+      if (typeof transition.handler === 'function' && transition.handler(newState, this.state) === false) return
 
-    const event = this.events.find(e => e.from === this.state && e.to === newState)
-    if (event && typeof event.handler === 'function') {
-      event.handler(this.state, newState)
+      if (this.onLeaveState) this.onLeaveState(this.state)
+
+      this.state = newState
+
+      if (this.onEnterState) this.onEnterState(newState)
     }
-
-    if (this.onLeaveState) this.onLeaveState(this.state)
-
-    this.state = newState
-
-    if (this.onEnterState) this.onEnterState(newState)
+  }
+  getState() {
+    return this.state
   }
 }
