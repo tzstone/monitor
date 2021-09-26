@@ -78,10 +78,10 @@ export function initHistoryCollect(monitor: Monitor) {
   })
 
   on(document, 'visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      stateMachine.setState(State.Active)
-    } else {
+    if (document.visibilityState === 'hidden') {
       stateMachine.setState(State.Passive)
+    } else {
+      stateMachine.setState(State.Active)
     }
   })
   ;['blur', 'focus', 'load', 'pageshow', 'beforeunload', 'pagehide'].forEach(key => {
