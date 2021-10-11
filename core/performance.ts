@@ -2,7 +2,73 @@ import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '.
 import { on } from '../utils'
 
 function initPerformanceListener(monitor: Monitor) {
-  // TODO:
+  on(window, 'load', function (e) {
+    setTimeout(() => {
+      const times = {} as any
+      let t = window.performance.timing as PerformanceTiming
+      if (typeof window.PerformanceNavigationTiming === 'function') {
+        try {
+          const nt2Timing = window.performance.getEntriesByType('navigation')[0]
+          if (nt2Timing) {
+            // @ts-ignore
+            t = nt2Timing as PerformanceNavigationTiming
+            // @ts-ignore
+            if (t.type !== 'navigate') return
+          }
+        } catch (err) {
+          // do no-thing
+        }
+      }
+
+      // 重定向时间
+      times.redirect = t.redirectEnd - t.redirectStart
+
+      // dns查询耗时
+      times.dnsLookup = t.domainLookupEnd - t.domainLookupStart
+
+      // TTFB 读取页面第一个字节的时间
+      times.ttfb = t.responseStart - t.fetchStart
+
+      // DNS 缓存时间
+      times.appcache = t.domainLookupStart - t.fetchStart
+
+      // 卸载页面的时间
+      times.unloadEvent = t.unloadEventEnd - t.unloadEventStart
+
+      // 执行onload回调时间
+      times.loadEvent = t.loadEventEnd - t.loadEventStart
+
+      // tcp连接耗时
+      times.tcp = t.connectEnd - t.connectStart
+
+      // ssl
+      times.ssl = t.secureConnectionStart === 0 ? 0 : t.requestStart - t.secureConnectionStart
+
+      // request请求耗时
+      times.request = t.responseEnd - t.requestStart
+
+      // 解析dom树耗时
+      times.domParse = t.domInteractive - (t.domLoading || t.responseEnd)
+
+      // 白屏时间
+      times.blank = t.domInteractive - t.fetchStart
+
+      // 首屏时间
+      times.domReady = t.domComplete - t.fetchStart
+
+      // load
+      times.loadPage = t.loadEventEnd - t.fetchStart
+
+      // 资源加载
+      times.resourceDownload = t.loadEventStart - t.domInteractive
+      // resourceDownload 有时会出现一个极大的负数, 简单兼容处理
+      if (times.resourceDownload < 0) {
+        times.resourceDownload = 1070
+      }
+
+      monitor.track(times, UploadType.Performance)
+    }, 100)
+  })
 }
 
 function initResponseTimeListener(monitor: Monitor) {

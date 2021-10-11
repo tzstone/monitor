@@ -38,11 +38,12 @@ export interface CommonInfo {
 }
 
 export enum UploadType {
-  JsError = 'JS_ERROR',
-  ResourceError = 'RESOURCE_ERROR',
-  RequestError = 'REQUEST_ERROR',
+  JsError = 'ERROR_JS',
+  ResourceError = 'ERROR_RESOURCE',
+  RequestError = 'ERROR_REQUEST',
   History = 'HISTORY',
-  ResponseTime = 'RESPONSE_TIME'
+  ResponseTime = 'RESPONSE_TIME',
+  Performance = 'PERFORMANCE'
 }
 
 export type ViewModel = {
