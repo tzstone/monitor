@@ -26,9 +26,6 @@ function initPerformanceListener(monitor: Monitor) {
       // dns查询耗时
       times.dnsLookup = t.domainLookupEnd - t.domainLookupStart
 
-      // TTFB 读取页面第一个字节的时间
-      times.ttfb = t.responseStart - t.fetchStart
-
       // DNS 缓存时间
       times.appcache = t.domainLookupStart - t.fetchStart
 
@@ -41,23 +38,33 @@ function initPerformanceListener(monitor: Monitor) {
       // tcp连接耗时
       times.tcp = t.connectEnd - t.connectStart
 
-      // ssl
-      times.ssl = t.secureConnectionStart === 0 ? 0 : t.requestStart - t.secureConnectionStart
+      // ssl安全连接耗时
+      times.ssl = t.secureConnectionStart === 0 ? 0 : t.connectEnd - t.secureConnectionStart
 
-      // request请求耗时
-      times.request = t.responseEnd - t.requestStart
+      // TTFB 读取页面第一个字节的时间
+      times.ttfb = t.responseStart - t.requestStart
+
+      // 数据传输耗时
+      times.contentDownload = t.responseEnd - t.responseStart
 
       // 解析dom树耗时
       times.domParse = t.domInteractive - (t.domLoading || t.responseEnd)
 
       // 白屏时间
-      times.blank = t.domInteractive - t.fetchStart
+      times.blank = (t.domLoading || t.responseEnd) - t.fetchStart
+
+      // domReady
+      times.domReady = t.domContentLoadedEventEnd - t.fetchStart
+
+      // 首次可交互时间
+      times.tti = t.domInteractive - t.fetchStart
 
       // 首屏时间
-      times.domReady = t.domComplete - t.fetchStart
+      // TODO: FMP
+      times.firstScreen = t.domInteractive - t.fetchStart
 
       // load
-      times.loadPage = t.loadEventEnd - t.fetchStart
+      times.loadPage = t.loadEventStart - t.fetchStart
 
       // 资源加载
       times.resourceDownload = t.loadEventStart - t.domInteractive
