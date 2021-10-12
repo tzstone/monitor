@@ -64,7 +64,7 @@ function initPerformanceListener(monitor: Monitor) {
       times.firstScreen = t.domInteractive - t.fetchStart
 
       // load
-      times.loadPage = t.loadEventStart - t.fetchStart
+      times.loadPage = t.loadEventEnd - t.fetchStart
 
       // 资源加载
       times.resourceDownload = t.loadEventStart - t.domInteractive
