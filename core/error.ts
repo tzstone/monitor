@@ -16,6 +16,8 @@ function initJSErrorListener(monitor: Monitor) {
   }
 
   // iframe onerror
+  // TODO: dynamic iframe
+  // MutationObserver https://cloud.tencent.com/developer/article/1650697
   fill(window, 'onerror', onErrorHandler)
   for (let i = 0; i < window.frames.length; i++) {
     fill(window.frames[i], 'onerror', onErrorHandler)
@@ -23,7 +25,8 @@ function initJSErrorListener(monitor: Monitor) {
 
   // unhandledrejection
   on(window, 'unhandledrejection', function (e: any) {
-    const data = formatJSError({ msg: e.reason, type: 'Unhandledrejection' }) as JsErrorInfo
+    const error = e.reason
+    const data = formatJSError({ msg: error && error.toString(), error, type: 'Unhandledrejection' }) as JsErrorInfo
     monitor.track(data, UploadType.JsError, { immediate: true })
   })
 }

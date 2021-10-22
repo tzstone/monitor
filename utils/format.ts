@@ -21,11 +21,12 @@ export function formatJSError({ msg = '', url, line, col, error, type }: JSError
 
   if (!type) {
     type = 'Error'
-    const groups = msg.match(ERROR_TYPES_RE)
-    if (groups) {
-      type = groups[1]
-      msg = groups[2]
-    }
+  }
+
+  const groups = msg.match(ERROR_TYPES_RE)
+  if (groups) {
+    type = groups[1]
+    msg = groups[2]
   }
 
   return {
