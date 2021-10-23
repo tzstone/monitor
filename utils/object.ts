@@ -22,3 +22,7 @@ export function fill(source: { [key: string]: any }, name: string, replacementFa
 
   source[name] = wrapped
 }
+
+export function getTag(obj) {
+  return Object.prototype.toString.call(obj)
+}
