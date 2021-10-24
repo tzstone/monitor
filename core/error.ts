@@ -27,7 +27,7 @@ function initJSErrorListener(monitor: Monitor) {
   on(window, 'unhandledrejection', function (e: any) {
     const error = e.reason
     const data = formatJSError({
-      msg: error && error.toString(),
+      msg: error != null && error.toString(),
       error: isError(error) ? error : undefined,
       type: 'Unhandledrejection'
     }) as JsErrorInfo
