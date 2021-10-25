@@ -25,7 +25,9 @@ export function formatJSError({ msg = '', url, line, col, error, type }: JSError
 
   const groups = msg.match(ERROR_TYPES_RE)
   if (groups) {
-    type = groups[1]
+    if (groups[1]) {
+      type = groups[1]
+    }
     msg = groups[2]
   }
 
