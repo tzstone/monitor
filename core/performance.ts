@@ -99,10 +99,10 @@ function initResponseTimeListener(monitor: Monitor) {
     if (res.ok) {
       const { status, statusText, url } = res
       const data: ResponseTimeInfo = {
+        responseTime: delay,
         responseUrl: url,
         responseStatus: status,
         responseStatusText: statusText,
-        responseTime: delay,
         type: 'fetch'
       }
       monitor.track(data, UploadType.ResponseTime)
