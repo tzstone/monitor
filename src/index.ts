@@ -1,7 +1,7 @@
 import { error } from './utils'
 import { init } from './core'
 import { Tracker } from './core/tracker'
-import { InitOptions, Plugin } from './types'
+import { InitOptions, Plugin } from '../types'
 
 const defOptions = {
   limit: 30

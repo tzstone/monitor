@@ -1,5 +1,5 @@
 import { fill, formatJSError } from '../utils'
-import { Monitor, UploadType, ViewModel, VueErrorInfo } from '../types'
+import { Monitor, UploadType, ViewModel, VueErrorInfo } from '../../types'
 
 const classifyRE = /(?:^|[-_])(\w)/g
 const classify = (str: string): string => str.replace(classifyRE, c => c.toUpperCase()).replace(/[-_]/g, '')

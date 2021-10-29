@@ -1,5 +1,13 @@
 import { on, fill, formatJSError, isError } from '../utils'
-import { Monitor, JsErrorInfo, ResourceErrorInfo, RequestErrorInfo, UploadType, XhrDetail, FetchDetail } from '../types'
+import {
+  Monitor,
+  JsErrorInfo,
+  ResourceErrorInfo,
+  RequestErrorInfo,
+  UploadType,
+  XhrDetail,
+  FetchDetail
+} from '../../types'
 
 // js
 function initJSErrorListener(monitor: Monitor) {

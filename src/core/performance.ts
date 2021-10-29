@@ -1,4 +1,4 @@
-import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '../types'
+import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '../../types'
 import { on } from '../utils'
 
 function initPerformanceListener(monitor: Monitor) {

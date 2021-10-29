@@ -1,4 +1,4 @@
-import { JsErrorInfo } from '../types'
+import { JsErrorInfo } from '../../types'
 interface JSErrorInit {
   msg: string
   url?: string

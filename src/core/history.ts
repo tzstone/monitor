@@ -1,5 +1,5 @@
 import { on, fill, StateMachine } from '../utils'
-import { Monitor, HistoryInfo, UploadType } from '../types'
+import { Monitor, HistoryInfo, UploadType } from '../../types'
 
 enum State {
   Active = 'active',

@@ -1,5 +1,5 @@
 import { fill, eventTrigger, on } from '../utils'
-import { Monitor } from '../types'
+import { Monitor } from '../../types'
 // import { CACHE_KEY } from '../shared/constants'
 
 function wrapXMLHttpRequest(monitor: Monitor) {

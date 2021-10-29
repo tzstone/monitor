@@ -1,6 +1,6 @@
 import { getCommonInfo } from './common'
 import { http } from '../utils'
-import { InitOptions, UploadType } from '../types'
+import { InitOptions, UploadType } from '../../types'
 import { CACHE_KEY } from '../shared/constants'
 
 interface ConfigInit {
