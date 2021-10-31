@@ -9,12 +9,12 @@ export type InitOptions = {
   plugins?: any[]
 }
 
-export interface Tracker {
+export class Tracker {
   getNotSentData(): any[]
   track(data, uploadType: UploadType, options?: { [key: string]: any }): void
 }
 
-export interface Monitor {
+export class Monitor {
   options: InitOptions
   $tracker: Tracker
   track(data, uploadType: UploadType, options?: { [key: string]: any }): void
