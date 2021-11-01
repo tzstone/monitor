@@ -69,8 +69,15 @@ function initResourceErrorListener(monitor: Monitor) {
 function initRequestErrorListener(monitor: Monitor) {
   on(window, 'xhrLoadEnd', function (e: CustomEventInit) {
     const { delay, xhr } = e.detail as XhrDetail
-    const { status, statusText, responseText, responseURL } = xhr
+    const { status, statusText, responseType, responseURL } = xhr
+
     if (!((status >= 200 && status < 300) || status === 304)) {
+      let responseText
+      // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseText
+      if (!responseType || responseType === 'text') {
+        responseText = xhr.responseText
+      }
+
       const data: RequestErrorInfo = {
         errorUrl: responseURL,
         errorStatus: status,
