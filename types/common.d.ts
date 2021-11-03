@@ -7,7 +7,7 @@ export type InitOptions = {
   userName?: string
   debug?: boolean
   plugins?: any[]
-  trackErrorLimit?: number
+  errorLimit?: number
 }
 
 export class Tracker {

@@ -9,13 +9,13 @@ interface ConfigInit {
 
 const defOptions = {
   limit: 30,
-  trackErrorLimit: 15
+  errorLimit: 15
 }
 
 export class Tracker {
   private queue: any[]
   private options: InitOptions
-  private trackErrorCount = 0
+  private errorCount = 0
   constructor(options: InitOptions) {
     this.options = Object.assign({}, defOptions, options)
     this.checkCacheData()
@@ -40,9 +40,9 @@ export class Tracker {
     }
   }
   private send(data: any[]) {
-    const { url, trackErrorLimit } = this.options
-    if (this.trackErrorCount >= trackErrorLimit) {
-      warn('reached trackErrorLimit limit:', trackErrorLimit)
+    const { url, errorLimit } = this.options
+    if (this.errorCount >= errorLimit) {
+      warn('reached errorLimit:', errorLimit)
       return
     }
 
@@ -51,10 +51,10 @@ export class Tracker {
       data,
       function success() {
         // reset
-        this.trackErrorCount = 0
+        this.errorCount = 0
       },
       function error() {
-        this.trackErrorCount++
+        this.errorCount++
         this.queue = data.concat(this.queue)
       }
     )
