@@ -1,5 +1,5 @@
 import { getCommonInfo } from './common'
-import { http } from '../utils'
+import { http, warn } from '../utils'
 import { InitOptions, UploadType } from '../../types'
 import { CACHE_KEY } from '../shared/constants'
 
@@ -8,12 +8,14 @@ interface ConfigInit {
 }
 
 const defOptions = {
-  limit: 30
+  limit: 30,
+  trackErrorLimit: 15
 }
 
 export class Tracker {
   private queue: any[]
   private options: InitOptions
+  private trackErrorCount = 0
   constructor(options: InitOptions) {
     this.options = Object.assign({}, defOptions, options)
     this.checkCacheData()
@@ -38,14 +40,21 @@ export class Tracker {
     }
   }
   private send(data: any[]) {
-    const { url } = this.options
+    const { url, trackErrorLimit } = this.options
+    if (this.trackErrorCount >= trackErrorLimit) {
+      warn('reached trackErrorLimit limit:', trackErrorLimit)
+      return
+    }
+
     http(
       url,
       data,
       function success() {
-        // do-nothing
+        // reset
+        this.trackErrorCount = 0
       },
       function error() {
+        this.trackErrorCount++
         this.queue = data.concat(this.queue)
       }
     )
