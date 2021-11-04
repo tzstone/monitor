@@ -31,5 +31,8 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "dependencies": {
+    "js-cookie": "^3.0.1"
+  }
 }

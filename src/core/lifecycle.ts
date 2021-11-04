@@ -1,4 +1,5 @@
-import { fill, eventTrigger, on } from '../utils'
+import Cookies from 'js-cookie'
+import { fill, eventTrigger, on, genUuid } from '../utils'
 import { Monitor } from '../../types'
 // import { CACHE_KEY } from '../shared/constants'
 
@@ -98,7 +99,16 @@ function initUnloadListener(monitor: Monitor) {
   // })
 }
 
+function initUuid() {
+  let uuid = Cookies.get('monitor_uuid')
+  if (!uuid) {
+    uuid = genUuid()
+    Cookies.set('monitor_uuid', uuid, { expires: new Date(9999) }) // 永不过期
+  }
+}
+
 export function initLifecycle(monitor) {
+  initUuid()
   wrapXMLHttpRequest(monitor)
   wrapFetch(monitor)
 }
