@@ -11,3 +11,14 @@ export function genUuid() {
   const uuid = s.join('')
   return uuid
 }
+
+import Cookies from 'js-cookie'
+
+export const uuidCache = {
+  get(): string {
+    return Cookies.get('monitor_uuid')
+  },
+  set(): void {
+    Cookies.set('monitor_uuid', genUuid(), { expires: new Date(9999, 11, 31) }) // 永不过期
+  }
+}

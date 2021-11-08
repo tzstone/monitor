@@ -1,16 +1,16 @@
-import Cookies from 'js-cookie'
 import { InitOptions, UploadType } from '../../types'
+import { uuidCache } from '../utils'
 
 const screen = (() => {
-  const { clientWidth, clientHeight } = document.documentElement
-  return `${clientWidth}x${clientHeight}`
+  const { width, height } = window.screen
+  return `${width}x${height}`
 })()
 
 let uuid
 export function getCommonInfo(options: InitOptions, uploadType: UploadType) {
   const { userId, userName, appKey, appVersion } = options
   if (!uuid) {
-    uuid = Cookies.get('monitor_uuid')
+    uuid = uuidCache.get()
   }
 
   return {

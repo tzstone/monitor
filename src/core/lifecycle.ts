@@ -1,7 +1,5 @@
-import Cookies from 'js-cookie'
-import { fill, eventTrigger, on, genUuid } from '../utils'
+import { fill, eventTrigger, on, uuidCache } from '../utils'
 import { Monitor } from '../../types'
-// import { CACHE_KEY } from '../shared/constants'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
   const url = monitor.options.url
@@ -60,14 +58,23 @@ function wrapFetch(monitor: Monitor) {
 
 function send(url: string, data: any[]) {
   if (navigator.sendBeacon) {
-    navigator.sendBeacon(url, JSON.stringify(data))
+    const blob = new Blob([JSON.stringify(data)], {
+      type: 'text/plain;charset=UTF-8'
+    })
+    navigator.sendBeacon(url, blob)
   } else {
-    // 也可用new Image
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', url, false) // 同步
-    // 需在 open 和 send 之间调用
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-    xhr.send(JSON.stringify(data))
+    const img = (window['beaconImg'] = new Image()) // img挂载在window下, 防止请求未发送前被垃圾回收
+    img.onload = img.onerror = function () {
+      img.onload = img.onerror = null
+    }
+    img.src = `${url}?${JSON.stringify(data)}`
+
+    // or 同步xhr
+    // const xhr = new XMLHttpRequest()
+    // xhr.open('POST', url, false) // 同步
+    // // 需在 open 和 send 之间调用
+    // xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    // xhr.send(JSON.stringify(data))
   }
 }
 
@@ -86,24 +93,12 @@ function initUnloadListener(monitor: Monitor) {
 
   on(window, 'unload', unloadHandler)
   on(window, 'beforeunload', unloadHandler)
-
-  // 缓存未发送数据, 考虑打开多tab
-  // on(window, 'unload', function () {
-  //   const { $tracker } = monitor
-  //   const data = $tracker.getNotSentData()
-  //   let cacheData = localStorage.getItem(CACHE_KEY)
-  //   cacheData = (cacheData && JSON.parse(cacheData)) || []
-  //   // @ts-ignore
-  //   cacheData = cacheData.concat(data)
-  //   localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData))
-  // })
 }
 
 function initUuid() {
-  let uuid = Cookies.get('monitor_uuid')
+  const uuid = uuidCache.get()
   if (!uuid) {
-    uuid = genUuid()
-    Cookies.set('monitor_uuid', uuid, { expires: new Date(9999) }) // 永不过期
+    uuidCache.set()
   }
 }
 

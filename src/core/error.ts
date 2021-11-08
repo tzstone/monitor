@@ -23,10 +23,10 @@ function initJSErrorListener(monitor: Monitor) {
     }
   }
 
+  fill(window, 'onerror', onErrorHandler)
   // iframe onerror
   // TODO: dynamic iframe
   // MutationObserver https://cloud.tencent.com/developer/article/1650697
-  fill(window, 'onerror', onErrorHandler)
   for (let i = 0; i < window.frames.length; i++) {
     fill(window.frames[i], 'onerror', onErrorHandler)
   }
@@ -47,7 +47,7 @@ function initJSErrorListener(monitor: Monitor) {
 function initResourceErrorListener(monitor: Monitor) {
   on(
     window,
-    'onerror',
+    'error',
     function (e: Event) {
       const target = (e.target || e.srcElement) as Element
       const type = target.localName
