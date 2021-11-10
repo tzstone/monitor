@@ -1,4 +1,5 @@
 import { JsErrorInfo } from '../../types'
+import { isError, isObjectLike } from './lang'
 interface JSErrorInit {
   msg: string
   url?: string
@@ -8,7 +9,9 @@ interface JSErrorInit {
   type?: string
 }
 
-export function formatJSError({ msg = '', url, line, col, error, type }: JSErrorInit): JsErrorInfo {
+export function formatJSError({ msg, url, line, col, error, type }: JSErrorInit): JsErrorInfo {
+  if (msg == null) msg = ''
+  msg += ''
   const ERROR_TYPES_RE =
     /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/i
 
@@ -39,4 +42,11 @@ export function formatJSError({ msg = '', url, line, col, error, type }: JSError
     errorStack: stack,
     errorType: type
   }
+}
+
+export function errorReason2String(reason): string {
+  if (reason == null) return ''
+  if (isError(reason)) return reason.message
+  if (isObjectLike(reason)) return JSON.stringify(reason)
+  return reason + ''
 }

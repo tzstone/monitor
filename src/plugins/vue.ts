@@ -95,7 +95,7 @@ export const plugin = {
       return function (error: Error, vm: ViewModel, lifecycleHook: string) {
         const componentName = formatComponentName(vm, false)
         const trace = vm ? generateComponentTrace(vm) : ''
-        const msg = `Error in ${lifecycleHook}: "${error && error.toString()}"`
+        const msg = `Error in ${lifecycleHook}: "${error && error.message}"`
         const data: VueErrorInfo = Object.assign(formatJSError({ msg, error }), { componentName, trace })
         monitor.track(data, UploadType.JsError)
 

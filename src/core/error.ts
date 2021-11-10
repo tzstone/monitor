@@ -1,4 +1,4 @@
-import { on, fill, formatJSError, isError } from '../utils'
+import { on, fill, formatJSError, isError, errorReason2String } from '../utils'
 import {
   Monitor,
   JsErrorInfo,
@@ -33,10 +33,10 @@ function initJSErrorListener(monitor: Monitor) {
 
   // unhandledrejection
   on(window, 'unhandledrejection', function (e: any) {
-    const error = e.reason
+    const reason = e.reason
     const data = formatJSError({
-      msg: error != null && error.toString(),
-      error: isError(error) ? error : undefined,
+      msg: errorReason2String(reason),
+      error: isError(reason) ? reason : undefined,
       type: 'Unhandledrejection'
     }) as JsErrorInfo
     monitor.track(data, UploadType.JsError, { immediate: true })
