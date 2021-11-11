@@ -78,6 +78,9 @@ function initRequestErrorListener(monitor: Monitor) {
         responseText = xhr.responseText
       }
 
+      // 无效数据
+      if (status === 0 && !responseURL && !responseText) return
+
       const data: RequestErrorInfo = {
         errorUrl: responseURL,
         errorStatus: status,
@@ -85,6 +88,7 @@ function initRequestErrorListener(monitor: Monitor) {
         errorResponseText: responseText,
         errorDelay: delay
       }
+
       monitor.track(data, UploadType.RequestError, { immediate: true })
     }
   })

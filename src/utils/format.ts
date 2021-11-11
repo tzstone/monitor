@@ -12,12 +12,8 @@ interface JSErrorInit {
 export function formatJSError({ msg, url, line, col, error, type }: JSErrorInit): JsErrorInfo {
   if (msg == null) msg = ''
   msg += ''
-  const ERROR_TYPES_RE =
-    /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/i
 
-  url = url || window.location.href
-
-  let stack = error ? error.stack : null
+  let stack = error ? error.stack : ''
   if (stack as string) {
     stack = stack.substring(0, 1e3)
   }
@@ -26,6 +22,8 @@ export function formatJSError({ msg, url, line, col, error, type }: JSErrorInit)
     type = 'Error'
   }
 
+  const ERROR_TYPES_RE =
+    /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/i
   const groups = msg.match(ERROR_TYPES_RE)
   if (groups) {
     if (groups[1]) {
