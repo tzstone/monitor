@@ -24,6 +24,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
               if (url !== (xhr as any)._requestUrl) {
                 const endTime = +new Date()
                 const delay = endTime - startTime
+                // TODO: 请求参数
                 eventTrigger('xhrLoadEnd', { delay, xhr })
               }
             }
@@ -48,6 +49,7 @@ function wrapFetch(monitor: Monitor) {
         if (url !== res.url) {
           const endTime = +new Date()
           const delay = endTime - startTime
+          // TODO: 请求参数
           eventTrigger('fetchLoadEnd', { delay, res: res.clone() })
         }
         return res

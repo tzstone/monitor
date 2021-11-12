@@ -1,5 +1,5 @@
 import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '../../types'
-import { on } from '../utils'
+import { on, firstScreenPromise } from '../utils'
 
 function initPerformanceListener(monitor: Monitor) {
   on(window, 'load', function (e) {
@@ -59,10 +59,6 @@ function initPerformanceListener(monitor: Monitor) {
       // 首次可交互时间
       times.tti = t.domInteractive - t.fetchStart
 
-      // 首屏时间
-      // TODO: FMP
-      times.firstScreen = t.domInteractive - t.fetchStart
-
       // load
       times.loadPage = t.loadEventStart - t.fetchStart
 
@@ -73,7 +69,11 @@ function initPerformanceListener(monitor: Monitor) {
         times.resourceDownload = 1070
       }
 
-      monitor.track(times, UploadType.Performance)
+      firstScreenPromise.then(firstScreen => {
+        // 首屏时间
+        times.firstScreen = firstScreen
+        monitor.track(times, UploadType.Performance)
+      })
     }, 100)
   })
 }
