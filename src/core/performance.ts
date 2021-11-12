@@ -1,5 +1,5 @@
 import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '../../types'
-import { on, firstScreenPromise } from '../utils'
+import { on, fcpPromise } from '../utils'
 
 function initPerformanceListener(monitor: Monitor) {
   on(window, 'load', function (e) {
@@ -12,6 +12,7 @@ function initPerformanceListener(monitor: Monitor) {
           if (nt2Timing) {
             // @ts-ignore
             t = nt2Timing as PerformanceNavigationTiming
+            // 不统计刷新/前进/后退类型, 避免缓存影响
             // @ts-ignore
             if (t.type !== 'navigate') return
           }
@@ -69,9 +70,9 @@ function initPerformanceListener(monitor: Monitor) {
         times.resourceDownload = 1070
       }
 
-      firstScreenPromise.then(firstScreen => {
+      fcpPromise.then(fcp => {
         // 首屏时间
-        times.firstScreen = firstScreen
+        times.fcp = fcp
         monitor.track(times, UploadType.Performance)
       })
     }, 100)
