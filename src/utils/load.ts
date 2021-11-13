@@ -7,8 +7,7 @@ function isInFirstScreen(target) {
   return rect.left >= 0 && rect.left < screenWidth && rect.top >= 0 && rect.top < screenHeight
 }
 
-// 首次有效绘制FMP(First Meaningful Paint)
-// Aegis的实现
+// 首屏渲染: Aegis的实现
 function getFirstScreen() {
   const ignoreEleList = ['script', 'style', 'link', 'br']
 
@@ -129,6 +128,7 @@ function getFCP() {
 
 export const fcpPromise = getFCP()
 
+// 首次有效绘制FMP(First Meaningful Paint)
 function getTrendFMP() {
   const IGNORE_TAGS = ['script', 'style', 'meta', 'head', 'link']
 
