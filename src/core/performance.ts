@@ -1,5 +1,5 @@
 import { Monitor, UploadType, XhrDetail, FetchDetail, ResponseTimeInfo } from '../../types'
-import { on, fcpPromise } from '../utils'
+import { on, firstScreenPromise, fpPromise, fcpPromise, fmpPromise } from '../utils'
 
 function initPerformanceListener(monitor: Monitor) {
   on(window, 'load', function (e) {
@@ -70,9 +70,11 @@ function initPerformanceListener(monitor: Monitor) {
         times.resourceDownload = 1070
       }
 
-      fcpPromise.then(fcp => {
-        // 首屏时间
+      Promise.all([fpPromise, fcpPromise, fmpPromise, firstScreenPromise]).then(([fp, fcp, fmp, firstScreen]) => {
+        times.fp = fp
         times.fcp = fcp
+        times.fmp = fmp
+        times.firstScreen = firstScreen // 首屏时间
         monitor.track(times, UploadType.Performance)
       })
     }, 100)
