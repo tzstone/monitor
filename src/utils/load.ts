@@ -129,6 +129,7 @@ function getFCP() {
 export const fcpPromise = getFCP()
 
 // 首次有效绘制FMP(First Meaningful Paint)
+// 趋势FMP
 function getTrendFMP() {
   const IGNORE_TAGS = ['script', 'style', 'meta', 'head', 'link']
 
@@ -181,6 +182,11 @@ function getTrendFMP() {
 
     return res.time
   })
+}
+
+// TODO: 权重FMP
+function getWeightFMP() {
+  //
 }
 
 export const fmpPromise = getTrendFMP()

@@ -1,5 +1,5 @@
 import { fill, eventTrigger, on, uuidCache } from '../utils'
-import { Monitor } from '../../types'
+import { Monitor, FetchDetail, XhrDetail } from '../../types'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
   const url = monitor.options.url
@@ -13,7 +13,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
   })
 
   fill(XMLHttpRequest.prototype, 'send', function (originalSend) {
-    return function (...sendArgs) {
+    return function (body) {
       // eslint-disable-next-line
       const xhr: XMLHttpRequest = this
       const startTime = +new Date()
@@ -24,8 +24,19 @@ function wrapXMLHttpRequest(monitor: Monitor) {
               if (url !== (xhr as any)._requestUrl) {
                 const endTime = +new Date()
                 const delay = endTime - startTime
-                // TODO: 请求参数
-                eventTrigger('xhrLoadEnd', { delay, xhr })
+
+                let _body
+                // json/x-www-form-urlencoded
+                if (typeof body === 'string') {
+                  _body = body
+                }
+
+                const detail: XhrDetail = {
+                  delay,
+                  xhr,
+                  body: _body
+                }
+                eventTrigger('xhrLoadEnd', detail)
               }
             }
 
@@ -33,7 +44,8 @@ function wrapXMLHttpRequest(monitor: Monitor) {
           }
         })
       }
-      originalSend.apply(this, sendArgs)
+      // eslint-disable-next-line
+      originalSend.apply(this, arguments)
     }
   })
 }
@@ -43,14 +55,26 @@ function wrapFetch(monitor: Monitor) {
 
   const url = monitor.options.url
   fill(window, 'fetch', function (original) {
-    return function (...args) {
+    return function (resource, init) {
       const startTime = +new Date()
-      return original.apply(this, args).then((res: Response) => {
+
+      let body
+      // json/x-www-form-urlencoded
+      if (init && typeof init.body === 'string') {
+        body = init.body
+      }
+
+      // eslint-disable-next-line
+      return original.apply(this, arguments).then((res: Response) => {
         if (url !== res.url) {
           const endTime = +new Date()
           const delay = endTime - startTime
-          // TODO: 请求参数
-          eventTrigger('fetchLoadEnd', { delay, res: res.clone() })
+          const detail: FetchDetail = {
+            delay,
+            res: res.clone(),
+            body
+          }
+          eventTrigger('fetchLoadEnd', detail)
         }
         return res
       })

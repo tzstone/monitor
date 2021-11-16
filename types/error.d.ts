@@ -24,4 +24,5 @@ export interface RequestErrorInfo {
   errorStatusText: string
   errorResponseText: string
   errorDelay: number
+  requestBody?: string
 }

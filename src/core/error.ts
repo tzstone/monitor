@@ -68,7 +68,7 @@ function initResourceErrorListener(monitor: Monitor) {
 // request
 function initRequestErrorListener(monitor: Monitor) {
   on(window, 'xhrLoadEnd', function (e: CustomEventInit) {
-    const { delay, xhr } = e.detail as XhrDetail
+    const { delay, xhr, body } = e.detail as XhrDetail
     const { status, statusText, responseType, responseURL } = xhr
 
     if (!((status >= 200 && status < 300) || status === 304)) {
@@ -86,7 +86,8 @@ function initRequestErrorListener(monitor: Monitor) {
         errorStatus: status,
         errorStatusText: statusText,
         errorResponseText: responseText,
-        errorDelay: delay
+        errorDelay: delay,
+        requestBody: body
       }
 
       monitor.track(data, UploadType.RequestError, { immediate: true })
@@ -94,7 +95,7 @@ function initRequestErrorListener(monitor: Monitor) {
   })
 
   on(window, 'fetchLoadEnd', function (e: CustomEventInit) {
-    const { delay, res } = e.detail as FetchDetail
+    const { delay, res, body } = e.detail as FetchDetail
     if (!res.ok) {
       const { status, statusText, url } = res
       res.text().then(responseText => {
@@ -103,7 +104,8 @@ function initRequestErrorListener(monitor: Monitor) {
           errorStatus: status,
           errorStatusText: statusText,
           errorResponseText: responseText,
-          errorDelay: delay
+          errorDelay: delay,
+          requestBody: body
         }
         monitor.track(data, UploadType.RequestError, { immediate: true })
       })

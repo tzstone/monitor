@@ -3,5 +3,6 @@ export type ResponseTimeInfo = {
   responseUrl: string
   responseStatus: number
   responseStatusText: string
+  requestBody?: string
   type: string
 }

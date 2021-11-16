@@ -83,7 +83,7 @@ function initPerformanceListener(monitor: Monitor) {
 
 function initResponseTimeListener(monitor: Monitor) {
   on(window, 'xhrLoadEnd', function (e: CustomEventInit) {
-    const { delay, xhr } = e.detail as XhrDetail
+    const { delay, xhr, body } = e.detail as XhrDetail
     const { status, statusText, responseURL } = xhr
     if ((status >= 200 && status < 300) || status === 304) {
       const data: ResponseTimeInfo = {
@@ -91,6 +91,7 @@ function initResponseTimeListener(monitor: Monitor) {
         responseUrl: responseURL,
         responseStatus: status,
         responseStatusText: statusText,
+        requestBody: body,
         type: 'xhr'
       }
       monitor.track(data, UploadType.ResponseTime)
@@ -98,7 +99,7 @@ function initResponseTimeListener(monitor: Monitor) {
   })
 
   on(window, 'fetchLoadEnd', function (e: CustomEventInit) {
-    const { delay, res } = e.detail as FetchDetail
+    const { delay, res, body } = e.detail as FetchDetail
     if (res.ok) {
       const { status, statusText, url } = res
       const data: ResponseTimeInfo = {
@@ -106,6 +107,7 @@ function initResponseTimeListener(monitor: Monitor) {
         responseUrl: url,
         responseStatus: status,
         responseStatusText: statusText,
+        requestBody: body,
         type: 'fetch'
       }
       monitor.track(data, UploadType.ResponseTime)
