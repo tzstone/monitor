@@ -30,6 +30,7 @@ export class Monitor {
 
     this.options = Object.assign({}, defOptions, options || {}) as InitOptions
     this.$tracker = new Tracker(this.options)
+    // TODO:
     ;(this.options.plugins || []).forEach((plugin: Plugin) => {
       plugin.install(this)
     })

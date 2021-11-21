@@ -4,5 +4,6 @@ export type ResponseTimeInfo = {
   responseStatus: number
   responseStatusText: string
   requestBody?: string
+  requestMethod: string
   type: string
 }

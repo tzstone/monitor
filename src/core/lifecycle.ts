@@ -1,4 +1,4 @@
-import { fill, eventTrigger, on, uuidCache } from '../utils'
+import { fill, eventTrigger, on, uuidCache, isObjectLike } from '../utils'
 import { Monitor, FetchDetail, XhrDetail } from '../../types'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
@@ -7,6 +7,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
   fill(XMLHttpRequest.prototype, 'open', function (original) {
     return function (method, url) {
       this._requestUrl = url
+      this._requestMethod = method
       // eslint-disable-next-line
       return original.apply(this, arguments)
     }
@@ -24,6 +25,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
               if (url !== (xhr as any)._requestUrl) {
                 const endTime = +new Date()
                 const delay = endTime - startTime
+                const method = (xhr as any)._requestMethod
 
                 let _body
                 // json/x-www-form-urlencoded
@@ -34,7 +36,8 @@ function wrapXMLHttpRequest(monitor: Monitor) {
                 const detail: XhrDetail = {
                   delay,
                   xhr,
-                  body: _body
+                  body: _body,
+                  method
                 }
                 eventTrigger('xhrLoadEnd', detail)
               }
@@ -57,11 +60,19 @@ function wrapFetch(monitor: Monitor) {
   fill(window, 'fetch', function (original) {
     return function (resource, init) {
       const startTime = +new Date()
-
       let body
-      // json/x-www-form-urlencoded
-      if (init && typeof init.body === 'string') {
-        body = init.body
+      let method = 'GET'
+
+      if (resource instanceof Request) {
+        // TODO: resource.body is a ReadableStream
+        body = resource.body
+        method = resource.method
+      } else if (isObjectLike(init)) {
+        // json/x-www-form-urlencoded
+        if (typeof init.body === 'string') {
+          body = init.body
+        }
+        method = init.method
       }
 
       // eslint-disable-next-line
@@ -72,7 +83,8 @@ function wrapFetch(monitor: Monitor) {
           const detail: FetchDetail = {
             delay,
             res: res.clone(),
-            body
+            body,
+            method
           }
           eventTrigger('fetchLoadEnd', detail)
         }
