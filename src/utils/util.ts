@@ -22,3 +22,14 @@ export const uuidCache = {
     Cookies.set('monitor_uuid', genUuid(), { expires: new Date(9999, 11, 31) }) // 永不过期
   }
 }
+
+// 可能在运行期间改变, 不做缓存
+export function getUserInfo(): { userId; userName } {
+  let info: any = localStorage.getItem('_monitor_user_info_')
+  try {
+    info = JSON.parse(info)
+  } catch (e) {
+    info = {}
+  }
+  return info
+}

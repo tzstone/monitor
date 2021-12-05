@@ -101,7 +101,7 @@ function send(url: string, data: any[]) {
     })
     navigator.sendBeacon(url, blob)
   } else {
-    const img = (window['beaconImg'] = new Image()) // img挂载在window下, 防止请求未发送前被垃圾回收
+    const img = (window['beaconImg' + Date.now()] = new Image()) // img挂载在window下, 防止请求未发送前被垃圾回收
     img.onload = img.onerror = function () {
       img.onload = img.onerror = null
     }

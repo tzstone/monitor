@@ -1,5 +1,5 @@
 import { InitOptions, UploadType } from '../../types'
-import { uuidCache } from '../utils'
+import { uuidCache, getUserInfo } from '../utils'
 
 const screen = (() => {
   const { width, height } = window.screen
@@ -8,7 +8,8 @@ const screen = (() => {
 
 let uuid
 export function getCommonInfo(options: InitOptions, uploadType: UploadType) {
-  const { userId, userName, appKey, appVersion } = options
+  const { userId, userName } = getUserInfo()
+  const { appKey, appVersion } = options
   if (!uuid) {
     uuid = uuidCache.get()
   }

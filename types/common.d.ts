@@ -3,11 +3,10 @@ export type InitOptions = {
   url: string
   appKey: string
   appVersion?: string
-  userId: string
-  userName?: string
   debug?: boolean
   plugins?: any[]
   errorLimit?: number
+  disable?: boolean // TODO:
 }
 
 export class Tracker {
