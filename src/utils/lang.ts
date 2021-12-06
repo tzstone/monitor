@@ -21,3 +21,7 @@ export function isError(obj): boolean {
     (typeof obj.message === 'string' && typeof obj.name === 'string' && !isPlainObject(obj))
   )
 }
+
+export function isDevEnv(): boolean {
+  return /^http(s)?:\/\/localhost/.test(location.href)
+}

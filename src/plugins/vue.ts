@@ -1,4 +1,4 @@
-import { fill, formatJSError } from '../utils'
+import { fill, formatJSError, isDevEnv } from '../utils'
 import { Monitor, UploadType, ViewModel, VueErrorInfo } from '../../types'
 
 const classifyRE = /(?:^|[-_])(\w)/g
@@ -89,7 +89,9 @@ export const plugin = {
   },
   install(monitor: Monitor) {
     const { Vue } = this
-    if (!Vue) return
+    // 本地开发环境不重写errorHandler, 方便开发调试
+    if (!Vue || isDevEnv()) return
+
     // eslint-disable-next-line
     fill(Vue.config, 'errorHandler', function (original) {
       return function (error: Error, vm: ViewModel, lifecycleHook: string) {
