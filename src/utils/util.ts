@@ -23,13 +23,21 @@ export const uuidCache = {
   }
 }
 
+const defUserInfo = {
+  userId: '',
+  userName: ''
+}
 // 可能在运行期间改变, 不做缓存
 export function getUserInfo(): { userId; userName } {
-  let info: any = localStorage.getItem('_monitor_user_info_')
+  let info: any = localStorage.getItem('monitorUserInfo')
   try {
-    info = JSON.parse(info)
+    if (info) {
+      info = JSON.parse(info)
+    } else {
+      info = defUserInfo
+    }
   } catch (e) {
-    info = {}
+    info = defUserInfo
   }
   return info
 }

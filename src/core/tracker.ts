@@ -57,7 +57,7 @@ export class Tracker {
       }
     )
   }
-  getNotSentData(): any[] {
+  getWaiting2SendData(): any[] {
     return this.queue
   }
 }

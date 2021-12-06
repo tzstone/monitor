@@ -10,7 +10,7 @@ export type InitOptions = {
 }
 
 export class Tracker {
-  getNotSentData(): any[]
+  getWaiting2SendData(): any[]
   track(data, uploadType: UploadType, options?: { [key: string]: any }): void
 }
 

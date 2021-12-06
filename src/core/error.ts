@@ -71,18 +71,15 @@ function initRequestErrorListener(monitor: Monitor) {
     const { delay, xhr, body, method } = e.detail as XhrDetail
     const { status, statusText, responseType, responseURL } = xhr
 
-    if (!((status >= 200 && status < 300) || status === 304)) {
+    if (!((status >= 200 && status < 300) || [304, 401, 0].includes(status))) {
       let responseText
       // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseText
       if (!responseType || responseType === 'text') {
         responseText = xhr.responseText
       }
 
-      // 无效数据
-      if (status === 0 && !responseURL && !responseText) return
-
       const data: RequestErrorInfo = {
-        errorUrl: responseURL,
+        errorUrl: responseURL, // TODO: ie兼容性
         errorStatus: status,
         errorStatusText: statusText,
         errorResponseText: responseText,
