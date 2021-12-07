@@ -84,11 +84,11 @@ function initPerformanceListener(monitor: Monitor) {
 function initResponseTimeListener(monitor: Monitor) {
   on(window, 'xhrLoadEnd', function (e: CustomEventInit) {
     const { delay, xhr, body, method } = e.detail as XhrDetail
-    const { status, statusText, responseURL } = xhr
+    const { status, statusText, _responseURL } = xhr
     if ((status >= 200 && status < 300) || status === 304) {
       const data: ResponseTimeInfo = {
         responseTime: delay,
-        responseUrl: responseURL,
+        responseUrl: _responseURL,
         responseStatus: status,
         responseStatusText: statusText,
         requestBody: body,

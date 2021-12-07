@@ -11,3 +11,11 @@ export type FetchDetail = {
   body?: string
   method: string
 }
+
+declare global {
+  interface XMLHttpRequest {
+    _responseURL: string
+    _requestUrl: string
+    _requestMethod: string
+  }
+}

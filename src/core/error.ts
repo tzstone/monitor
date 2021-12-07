@@ -69,7 +69,7 @@ function initResourceErrorListener(monitor: Monitor) {
 function initRequestErrorListener(monitor: Monitor) {
   on(window, 'xhrLoadEnd', function (e: CustomEventInit) {
     const { delay, xhr, body, method } = e.detail as XhrDetail
-    const { status, statusText, responseType, responseURL } = xhr
+    const { status, statusText, responseType, _responseURL } = xhr
 
     if (!((status >= 200 && status < 300) || [304, 401, 0].includes(status))) {
       let responseText
@@ -79,7 +79,7 @@ function initRequestErrorListener(monitor: Monitor) {
       }
 
       const data: RequestErrorInfo = {
-        errorUrl: responseURL, // TODO: ie兼容性
+        errorUrl: _responseURL,
         errorStatus: status,
         errorStatusText: statusText,
         errorResponseText: responseText,

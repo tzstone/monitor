@@ -22,16 +22,19 @@ function wrapXMLHttpRequest(monitor: Monitor) {
         fill(xhr, 'onreadystatechange', function (originalChange) {
           return function (...changeArgs) {
             if (xhr.readyState === 4) {
-              if (url !== (xhr as any)._requestUrl) {
+              if (url !== xhr._requestUrl) {
                 const endTime = +new Date()
                 const delay = endTime - startTime
-                const method = (xhr as any)._requestMethod
+                const method = xhr._requestMethod
 
                 let _body
                 // json/x-www-form-urlencoded
                 if (typeof body === 'string') {
                   _body = body
                 }
+
+                // 修复ie兼容性问题
+                xhr._responseURL = xhr.responseURL || xhr._requestUrl
 
                 const detail: XhrDetail = {
                   delay,
