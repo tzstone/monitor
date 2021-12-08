@@ -41,3 +41,9 @@ export function getUserInfo(): { userId; userName } {
   }
   return info
 }
+
+export function getAbsoluteUrl(url: string, base?): string {
+  const el = document.createElement('a')
+  el.href = (base || '') + url
+  return el.href
+}

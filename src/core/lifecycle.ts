@@ -1,4 +1,4 @@
-import { fill, eventTrigger, on, uuidCache, isObjectLike } from '../utils'
+import { fill, eventTrigger, on, uuidCache, isObjectLike, getAbsoluteUrl } from '../utils'
 import { Monitor, FetchDetail, XhrDetail } from '../../types'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
@@ -6,7 +6,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
   // 兼容IE9及以上
   fill(XMLHttpRequest.prototype, 'open', function (original) {
     return function (method, url) {
-      this._requestUrl = url
+      this._requestUrl = getAbsoluteUrl(url)
       this._requestMethod = method
       // eslint-disable-next-line
       return original.apply(this, arguments)
