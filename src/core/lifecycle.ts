@@ -2,7 +2,7 @@ import { fill, eventTrigger, on, uuidCache, isObjectLike, getAbsoluteUrl } from 
 import { Monitor, FetchDetail, XhrDetail } from '../../types'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
-  const url = monitor.options.url
+  const monitorUrl = monitor.options.url
   // 兼容IE9及以上
   fill(XMLHttpRequest.prototype, 'open', function (original) {
     return function (method, url) {
@@ -21,29 +21,27 @@ function wrapXMLHttpRequest(monitor: Monitor) {
       if ('onreadystatechange' in xhr && typeof xhr.onreadystatechange === 'function') {
         fill(xhr, 'onreadystatechange', function (originalChange) {
           return function (...changeArgs) {
-            if (xhr.readyState === 4) {
-              if (url !== xhr._requestUrl) {
-                const endTime = +new Date()
-                const delay = endTime - startTime
-                const method = xhr._requestMethod
+            if (xhr.readyState === 4 && monitorUrl !== xhr._requestUrl) {
+              const endTime = +new Date()
+              const delay = endTime - startTime
+              const method = xhr._requestMethod
 
-                let _body
-                // json/x-www-form-urlencoded
-                if (typeof body === 'string') {
-                  _body = body
-                }
-
-                // 修复ie兼容性问题
-                xhr._responseURL = xhr.responseURL || xhr._requestUrl
-
-                const detail: XhrDetail = {
-                  delay,
-                  xhr,
-                  body: _body,
-                  method
-                }
-                eventTrigger('xhrLoadEnd', detail)
+              let _body
+              // json/x-www-form-urlencoded
+              if (typeof body === 'string') {
+                _body = body
               }
+
+              // 修复ie兼容性问题
+              xhr._responseURL = xhr.responseURL || xhr._requestUrl
+
+              const detail: XhrDetail = {
+                delay,
+                xhr,
+                body: _body,
+                method
+              }
+              eventTrigger('xhrLoadEnd', detail)
             }
 
             return originalChange.apply(this, changeArgs)
@@ -59,7 +57,7 @@ function wrapXMLHttpRequest(monitor: Monitor) {
 function wrapFetch(monitor: Monitor) {
   if (!window.fetch || typeof window.fetch !== 'function') return
 
-  const url = monitor.options.url
+  const monitorUrl = monitor.options.url
   fill(window, 'fetch', function (original) {
     return function (resource, init) {
       const startTime = +new Date()
@@ -80,7 +78,7 @@ function wrapFetch(monitor: Monitor) {
 
       // eslint-disable-next-line
       return original.apply(this, arguments).then((res: Response) => {
-        if (url !== res.url) {
+        if (monitorUrl !== res.url) {
           const endTime = +new Date()
           const delay = endTime - startTime
           const detail: FetchDetail = {
