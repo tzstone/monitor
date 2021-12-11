@@ -7,9 +7,10 @@ interface ConfigInit {
 }
 
 const defOptions = {
-  limit: 30,
-  errorLimit: 15
+  limit: 30
 }
+
+const errorLimit = 15
 
 export class Tracker {
   private queue: any[]
@@ -19,7 +20,9 @@ export class Tracker {
     this.options = Object.assign({}, defOptions, options)
   }
   track(data, uploadType: UploadType, config?: ConfigInit) {
-    const { limit, debug } = this.options
+    const { limit, debug, disable } = this.options
+    if (disable) return
+
     const commonInfo = getCommonInfo(this.options, uploadType)
     const info = Object.assign({}, commonInfo, data)
 
@@ -38,7 +41,9 @@ export class Tracker {
     }
   }
   private send(data: any[]) {
-    const { url, errorLimit } = this.options
+    const { url, disable } = this.options
+    if (disable) return
+
     if (this.errorCount >= errorLimit) {
       warn('reached errorLimit:', errorLimit)
       return
@@ -58,6 +63,6 @@ export class Tracker {
     )
   }
   getWaiting2SendData(): any[] {
-    return this.queue
+    return this.queue.splice(0)
   }
 }

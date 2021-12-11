@@ -5,8 +5,7 @@ export type InitOptions = {
   appVersion?: string
   debug?: boolean
   plugins?: any[]
-  errorLimit?: number
-  disable?: boolean // TODO:
+  disable?: boolean
 }
 
 export class Tracker {
