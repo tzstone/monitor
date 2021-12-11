@@ -1,4 +1,4 @@
-import { fill, eventTrigger, on, uuidCache, isObjectLike, getAbsoluteUrl } from '../utils'
+import { fill, eventTrigger, on, uuidCache, isObjectLike, getAbsoluteUrl, throttle } from '../utils'
 import { Monitor, FetchDetail, XhrDetail } from '../../types'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
@@ -117,17 +117,21 @@ function send(url: string, data: any[]) {
   }
 }
 
+function start2send(monitor: Monitor) {
+  const { options, $tracker } = monitor
+  const data = $tracker.getWaiting2SendData()
+  if (data && data.length > 0) {
+    send(options.url, data)
+  }
+}
+
 let alreadySent = false
 
 function initUnloadListener(monitor: Monitor) {
   function unloadHandler() {
     if (alreadySent) return
     alreadySent = true
-    const { options, $tracker } = monitor
-    const data = $tracker.getWaiting2SendData()
-    if (data && data.length > 0) {
-      send(options.url, data)
-    }
+    start2send(monitor)
   }
 
   on(window, 'unload', unloadHandler)
@@ -141,6 +145,23 @@ function initUuid() {
   }
 }
 
+const idleTime = 30000
+function initIdleTimer(monitor: Monitor) {
+  let timer
+  const handler = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      start2send(monitor)
+    }, idleTime)
+  }
+  handler() // 启动
+
+  // idleTime内无以下事件发生, 判定为进入idle状态
+  ;['mousemove', 'mousedown', 'keyup', 'touchstart', 'scroll'].forEach(event => {
+    on(document, event, throttle(handler, 300))
+  })
+}
+
 export function initLifecycle(monitor) {
   initUuid()
   wrapXMLHttpRequest(monitor)
@@ -148,5 +169,6 @@ export function initLifecycle(monitor) {
 }
 
 export function initEvent(monitor) {
+  initIdleTimer(monitor)
   initUnloadListener(monitor)
 }
