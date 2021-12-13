@@ -1,5 +1,5 @@
 import { getCommonInfo } from './common'
-import { http, warn } from '../utils'
+import { http, warn, on, throttle } from '../utils'
 import { InitOptions, UploadType } from '../../types'
 
 interface ConfigInit {
@@ -10,17 +10,20 @@ const defOptions = {
   limit: 30
 }
 
-const errorLimit = 15
+const ERROR_LIMIT = 15
+const IDLE_TIME = 30000
 
 export class Tracker {
   private queue: any[]
   private options: InitOptions
   private errorCount = 0
+  private isIdle = false
   constructor(options: InitOptions) {
     this.options = Object.assign({}, defOptions, options)
+    this.initIdleTimer()
   }
   track(data, uploadType: UploadType, config?: ConfigInit) {
-    const { limit, debug, disable } = this.options
+    const { debug, disable } = this.options
     if (disable) return
 
     const commonInfo = getCommonInfo(this.options, uploadType)
@@ -34,18 +37,24 @@ export class Tracker {
       this.send([info])
     } else {
       this.queue.push(info)
-      if (this.queue.length >= limit) {
-        const buffer = this.queue.splice(0, limit)
-        this.send(buffer)
-      }
+      this.checkSend()
+    }
+  }
+  private checkSend() {
+    const { limit, disable } = this.options
+    if (disable) return
+
+    if (this.queue.length >= limit || this.isIdle) {
+      const buffer = this.queue.splice(0, limit)
+      this.send(buffer)
     }
   }
   private send(data: any[]) {
     const { url, disable } = this.options
     if (disable) return
 
-    if (this.errorCount >= errorLimit) {
-      warn('reached errorLimit:', errorLimit)
+    if (this.errorCount >= ERROR_LIMIT) {
+      warn('reached errorLimit:', ERROR_LIMIT)
       return
     }
 
@@ -61,6 +70,24 @@ export class Tracker {
         this.queue = data.concat(this.queue)
       }
     )
+  }
+  private initIdleTimer() {
+    let timer
+    const handler = () => {
+      this.isIdle = false
+      clearTimeout(timer)
+
+      timer = setTimeout(() => {
+        this.isIdle = true
+        this.checkSend()
+      }, IDLE_TIME)
+    }
+    handler() // 启动
+
+    // IDLE_TIME内无以下事件发生, 判定为进入idle状态
+    ;['mousemove', 'mousedown', 'mousewheel', 'keyup', 'touchstart', 'scroll'].forEach(event => {
+      on(document, event, throttle(handler, 300))
+    })
   }
   getWaiting2SendData(): any[] {
     return this.queue.splice(0)
