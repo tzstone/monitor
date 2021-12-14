@@ -24,14 +24,14 @@ export class Tracker {
   }
   track(data, uploadType: UploadType, config?: ConfigInit) {
     const { debug, disable } = this.options
-    if (disable) return
-
     const commonInfo = getCommonInfo(this.options, uploadType)
     const info = Object.assign({}, commonInfo, data)
 
     if (debug) {
       console.log('[monitor track]:', info)
     }
+
+    if (disable) return
 
     if (config && config.immediate) {
       this.send([info])
