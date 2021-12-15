@@ -2,7 +2,7 @@ import { fill, eventTrigger, on, uuidCache, isObjectLike, getAbsoluteUrl, thrott
 import { Monitor, FetchDetail, XhrDetail } from '../../types'
 
 function wrapXMLHttpRequest(monitor: Monitor) {
-  const monitorUrl = monitor.options.url
+  const monitorUrl = getAbsoluteUrl(monitor.options.url)
   // 兼容IE9及以上
   fill(XMLHttpRequest.prototype, 'open', function (original) {
     return function (method, url) {
@@ -57,7 +57,6 @@ function wrapXMLHttpRequest(monitor: Monitor) {
 function wrapFetch(monitor: Monitor) {
   if (!window.fetch || typeof window.fetch !== 'function') return
 
-  const monitorUrl = monitor.options.url
   fill(window, 'fetch', function (original) {
     return function (resource, init) {
       const startTime = +new Date()
@@ -78,17 +77,16 @@ function wrapFetch(monitor: Monitor) {
 
       // eslint-disable-next-line
       return original.apply(this, arguments).then((res: Response) => {
-        if (monitorUrl !== res.url) {
-          const endTime = +new Date()
-          const delay = endTime - startTime
-          const detail: FetchDetail = {
-            delay,
-            res: res.clone(),
-            body,
-            method
-          }
-          eventTrigger('fetchLoadEnd', detail)
+        const endTime = +new Date()
+        const delay = endTime - startTime
+        const detail: FetchDetail = {
+          delay,
+          res: res.clone(),
+          body,
+          method
         }
+        eventTrigger('fetchLoadEnd', detail)
+
         return res
       })
     }
